@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UwU</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<style type="text/css">
+.spell-titles,
+.section-title-casts,
+.guide {
+  cursor: pointer;
+}
+
+.spell-names {
+  display: none
+}
+
+.textarea-section {
+  display: none
+}
+
+ul.no-bullets {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+</style>
+
+<body class="bg-gray-100">
+  <div class="container mx-auto p-4">
+    <div>
+      <div class="mb-4">
+        <h1 class="guide"><b>Guide </b>▶</h1>
+        <div class="guide-content">
+          <ul class="no-bullets">
+            <li>1. Visit <a target="_blank" class="font-medium text-blue-600 dark:text-blue-500 hover:underline" href="https://uwu-logs.xyz/top?server=Icecrown">https://uwu-logs.xyz/top?server=Icecrown</a></li>
+            <li>2. Click on "<b>Top</b>", select a class and select a player</li>
+            <li>3. Choose a boss and click on the "<b>Date</b>" (e.g. 13-03-24)</li>
+            <li>4. Click on the player, on the upper right, click on the icon and select a boss (e.g. Deathbringer)</li>
+            <li>5. Right click on the page, then find "<b>Inspect element</b>", find "<b><i>&lt;tbody&gt;</i></b>" and right click > <i>Copy > Inner HTML</i></li>
+            <li>6. Go to spell timeline site, paste the result in "<b>Spell Name Extractor</b>", click on button ("<b>Extract Spell Names</b>")</li>
+            <li>7. Go back to uwu-logs site, click on "<b>Timeline</b>", click on "Before pull" and select a time (e.g. 5, 10, 15, 30)</li>
+            <li>8. Right click on the page, then find "<b>Inspect element</b>", find "<b><i>&lt;spells-main class="casts-section-main&gt;</i></b>" and right click > <i>Copy > Inner HTML</i></li>
+            <li>9. Go to spell timeline site, paste the result in "<b>Spell Casts</b>", click on button ("<b>Display Spell Rotation</b>")</li>
+          </ul>
+        </div>
+      </div>
+      <hr>
+      <div class="mt-4">
+        <button class="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" onclick="clearTextareas()">Clear</button>
+      </div>
+      <h3 class="spell-titles"><b>Spell Name Extractor </b>▶</h3>
+      <div class="spell-names">
+        <!-- Textarea for HTML input -->
+        <textarea id="htmlInput" rows="10" cols="100" placeholder="Paste your HTML here... (see guide)"></textarea>
+        <!-- Button to process the input -->
+        <button class='text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800' onclick="extractSpellNames()">Extract Spell Names</button>
+        <br>
+        <div class="container mx-auto p-4">
+          <pre id="spellList"></pre>
+        </div>
+      </div>
+      <div>
+        <!-- Clickable title to toggle visibility for Spell Rotation -->
+        <h3 class="section-title-casts"><b>Spell Casts </b>▶</h3>
+        <!-- Div for Spell Rotation -->
+        <div class="content-section spell-rotation">
+          <div class="textarea-section">
+            <!-- Textarea for HTML input -->
+            <textarea id="htmlInputSpellRotation" rows="10" cols="100" placeholder="Paste your HTML here... (see guide)"></textarea>
+            <!-- Button to display the spell rotation table -->
+            <button class='text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800' onclick="displaySpellRotation()">Display Spell Rotation</button>
+          </div>
+          <div class="container mx-auto p-4">
+            <h2 class="text-xl font-bold mb-4 section-title-timeline">Spell Timeline</h2>
+            <table class="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
+              <thead class="bg-gray-800 text-white">
+                <tr>
+                  <th class="py-3 px-5 text-left">Spell Name</th>
+                  <th class="py-3 px-5 text-left">Class Name</th>
+                  <th class="py-3 px-5 text-left">Time</th>
+                  <th class="py-3 px-5 text-left">Target</th>
+                  <!-- <th class="py-3 px-5 text-left">Source</th> -->
+                </tr>
+              </thead>
+              <tbody id="spellTableBody" class="divide-y divide-gray-200">
+                <!-- Rows will be inserted here by JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+    let spellList = [];
+    // Function to toggle the visibility of content sections
+    document.querySelector('.spell-titles').addEventListener('click', function() {
+      const spellNamesDiv = document.querySelector('.spell-names');
+      spellNamesDiv.style.display = spellNamesDiv.style.display === 'none' || spellNamesDiv.style.display === '' ? 'block' : 'none';
+    });
+
+    document.querySelector('.section-title-casts').addEventListener('click', function() {
+      const spellNamesDiv = document.querySelector('.textarea-section');
+      spellNamesDiv.style.display = spellNamesDiv.style.display === 'none' || spellNamesDiv.style.display === '' ? 'block' : 'none';
+    });
+
+    // document.querySelector('.guide').addEventListener('click', function() {
+// const spellNamesDiv = document.querySelector('.guide-content');
+// spellNamesDiv.style.display = spellNamesDiv.style.display === 'none' || spellNamesDiv.style.display === '' ? 'block' : 'none';
+// });
+
+
+    function extractSpellNames() {
+      // Get the value from the textarea
+      const html = document.getElementById('htmlInput').value;
+
+      // Create a template element
+      const template = document.createElement('template');
+
+      // Safely set the innerHTML of the template
+      template.innerHTML = html.trim(); // Trim to avoid any whitespace issues
+
+      // Get all elements with the class 'spell-name' within the template
+      const spellElements = template.content.querySelectorAll('.spell-name a');
+
+      // Extract the text content (spell names) from the selected elements
+      const spellNames = Array.from(spellElements).map(el => el.textContent.trim());
+      const trinketProcs = [
+        'Piercing Twilight',
+        'Twilight Flames',
+        'Siphoned Power',
+        'Agility of the Vrykul',
+        'Aim of the Iron Dwarves',
+        'Power of the Taunka',
+        'Precision of the Iron Dwarves',
+        'Speed of the Vrykul',
+        'Strength of the Taunka',
+      ]
+
+      spellList = [...spellNames, ...trinketProcs];
+
+      // Join the spells with a newline character to display each spell on a new line
+      const spellListString = `${spellNames.join(',\n')}`;
+
+      // Display the spell list in the <pre> tag
+      document.getElementById('spellList').textContent = spellListString;
+
+    }
+
+    // Function to parse the HTML and return the spell history
+    function getSpellHistory(html, specificSpells) {
+      // Create a DOM parser to parse the HTML string
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(html, 'text/html');
+
+      // Get all spell rows
+      const spellRows = doc.querySelectorAll('.spell-row');
+
+      // Initialize an array to store spell history
+      const spellHistory = [];
+
+      // Iterate through each spell row
+      spellRows.forEach(row => {
+        const spellName = row.getAttribute('data-spell-name');
+        // Check if the spell name is in the list of specific spells
+        if (specificSpells.includes(spellName)) {
+          // Get the img element within the spell-name-data
+          const imgElement = row.querySelector('spell-name-data img');
+          const imgSrc = imgElement ? imgElement.getAttribute('src') : null;
+
+          // Get all spell-cleu elements within the row
+          const spellCleus = row.querySelectorAll('spell-cleu');
+
+          // Iterate through each spell-cleu and collect data if it is SPELL_CAST_SUCCESS
+          spellCleus.forEach(cleu => {
+            // if (cleu.classList.contains('SPELL_CAST_SUCCESS')) {
+            // }
+            const className = cleu.className;
+            const time = parseFloat(cleu.getAttribute('data-time'));
+            const source = cleu.getAttribute('data-source');
+            const target = cleu.getAttribute('data-target');
+
+            // Push the spell data into the history array
+            spellHistory.push({ spellName, className, time, target, source, imgSrc });
+          });
+        }
+      });
+
+      // Sort the spell history by time
+      spellHistory.sort((a, b) => a.time - b.time);
+
+      return spellHistory;
+    }
+
+    // Function to filter and remove duplicates
+    function filterAndRemoveDuplicates(data) {
+      // Create a Map to store unique entries based on time, spellName, and target
+      const uniqueEntries = new Map();
+
+      data.forEach(entry => {
+        // Skip entries with target "nil"
+        // if (entry.target === "nil") return;
+
+        // Use a composite key of time, spellName, and target
+        const key = `${entry.time}-${entry.spellName}-${entry.target}`;
+
+        // Add entry to the Map if the key is not already present
+        if (!uniqueEntries.has(key)) {
+          uniqueEntries.set(key, entry);
+        }
+      });
+
+      // Convert the Map values back to an array
+      return Array.from(uniqueEntries.values());
+    }
+
+    // Function to display spell rotation table
+    function displaySpellRotation() {
+      // Get the value from the textarea
+      const htmlContent = document.getElementById('htmlInputSpellRotation').value;
+
+      // List of specific spells to include
+      const specificSpells = spellList;
+
+      // Get the spell history
+      const spellHistory = getSpellHistory(htmlContent, specificSpells);
+
+      // Filter and remove duplicates
+      const filteredData = filterAndRemoveDuplicates(spellHistory);
+
+      const tableBody = document.getElementById('spellTableBody');
+
+      filteredData.forEach(spell => {
+        const row = document.createElement('tr');
+        row.classList.add('MuiTableRow-root', 'MuiTableRow-hover');
+
+        // Create the first cell for the image and spell name
+        const imgCell = document.createElement('td');
+        imgCell.classList.add('MuiTableCell-root', 'flex');
+
+        // Create an img element and set its src attribute
+        const imgElement = document.createElement('img');
+        imgElement.src = `https://uwu-logs.xyz/${spell.imgSrc}`;
+        imgElement.alt = spell.spellName;
+        imgElement.style.width = '24px'; // Set width for the image
+        imgElement.style.height = '24px'; // Set height for the image
+        imgElement.style.marginRight = '8px'; // Add some space between the image and the text
+
+        // Create a span element for the spell name
+        const spellNameElement = document.createElement('span');
+        spellNameElement.textContent = spell.spellName;
+
+        // Append the image and spell name to the first cell
+        imgCell.appendChild(imgElement);
+        imgCell.appendChild(spellNameElement);
+
+        // Append the first cell to the row
+        row.appendChild(imgCell);
+
+        // Create cells for the other properties (class name, time, target, source)
+        const classNameCell = document.createElement('td');
+        classNameCell.classList.add('MuiTableCell-root');
+        classNameCell.textContent = spell.className;
+        row.appendChild(classNameCell);
+
+        const timeCell = document.createElement('td');
+        timeCell.classList.add('MuiTableCell-root');
+        timeCell.textContent = spell.time;
+        row.appendChild(timeCell);
+
+        const targetCell = document.createElement('td');
+        targetCell.classList.add('MuiTableCell-root');
+        targetCell.textContent = spell.target;
+        row.appendChild(targetCell);
+
+        // const sourceCell = document.createElement('td');
+        // sourceCell.classList.add('MuiTableCell-root');
+        // sourceCell.textContent = spell.source;
+        // row.appendChild(sourceCell);
+
+        // Append the complete row to the table body
+        tableBody.appendChild(row);
+      });
+    }
+
+    // Function to clear the contents of the textareas
+    function clearTextareas() {
+      document.getElementById('htmlInput').value = '';
+      document.getElementById('htmlInputSpellRotation').value = '';
+    }
+
+    </script>
+</body>
+
+</html>
