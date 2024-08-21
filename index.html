@@ -41,10 +41,10 @@ ul.no-bullets {
             <li>2. Click on "<b>Top</b>", select a class and select a player</li>
             <li>3. Choose a boss and click on the "<b>Date</b>" (e.g. 13-03-24)</li>
             <li>4. Click on the player, on the upper right, click on the icon and select a boss (e.g. Deathbringer)</li>
-            <li>5. Right click on the page, then find "<b>Inspect element</b>", find "<b><i>&lt;tbody&gt;</i></b>" and right click > <i>Copy > Inner HTML</i></li>
+            <li>5. Right click on the page, then find "<b>Inspect element</b>", find "<b><i>&lt;tbody&gt;</i></b>" and right click > <i>Copy > Element or Inner HTML</i></li>
             <li>6. Go to spell timeline site, paste the result in "<b>Spell Name Extractor</b>", click on button ("<b>Extract Spell Names</b>")</li>
             <li>7. Go back to uwu-logs site, click on "<b>Timeline</b>", click on "Before pull" and select a time (e.g. 5, 10, 15, 30)</li>
-            <li>8. Right click on the page, then find "<b>Inspect element</b>", find "<b><i>&lt;spells-main class="casts-section-main&gt;</i></b>" and right click > <i>Copy > Inner HTML</i></li>
+            <li>8. Right click on the page, then find "<b>Inspect element</b>", find "<b><i>&lt;spells-main class="casts-section-main&gt;</i></b>" and right click > <i>Copy > Element or Inner HTML</i></li>
             <li>9. Go to spell timeline site, paste the result in "<b>Spell Casts</b>", click on button ("<b>Display Spell Rotation</b>")</li>
           </ul>
         </div>
@@ -135,7 +135,7 @@ ul.no-bullets {
 
       // Extract the text content (spell names) from the selected elements
       const spellNames = Array.from(spellElements).map(el => el.textContent.trim());
-      const trinketProcs = [
+      const buffs = [
         'Piercing Twilight',
         'Twilight Flames',
         'Siphoned Power',
@@ -145,9 +145,12 @@ ul.no-bullets {
         'Precision of the Iron Dwarves',
         'Speed of the Vrykul',
         'Strength of the Taunka',
+        'Greatness',
+        'Icy Rage',
+        'Hysteria'
       ]
 
-      spellList = [...spellNames, ...trinketProcs];
+      spellList = [...spellNames, ...buffs];
 
       // Join the spells with a newline character to display each spell on a new line
       const spellListString = `${spellNames.join(',\n')}`;
