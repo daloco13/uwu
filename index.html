@@ -109,12 +109,18 @@ ul.no-bullets {
     });
 
     // document.querySelector('.guide').addEventListener('click', function() {
-// const spellNamesDiv = document.querySelector('.guide-content');
-// spellNamesDiv.style.display = spellNamesDiv.style.display === 'none' || spellNamesDiv.style.display === '' ? 'block' : 'none';
-// });
+    // const spellNamesDiv = document.querySelector('.guide-content');
+    // spellNamesDiv.style.display = spellNamesDiv.style.display === 'none' || spellNamesDiv.style.display === '' ? 'block' : 'none';
+    // });
 
 
     function extractSpellNames() {
+      // Get the tbody element by ID
+      const tbody = document.getElementById('spellTableBody');
+
+      // Clear the content of the tbody
+      tbody.innerHTML = '';
+
       // Get the value from the textarea
       const html = document.getElementById('htmlInput').value;
 
@@ -291,6 +297,18 @@ ul.no-bullets {
     function clearTextareas() {
       document.getElementById('htmlInput').value = '';
       document.getElementById('htmlInputSpellRotation').value = '';
+
+      // Get the tbody element by ID
+      const tbody = document.getElementById('spellTableBody');
+
+      // Clear the content of the tbody
+      tbody.innerHTML = '';
+
+      // Get the spellList element by ID
+      const spellList = document.getElementById('spellList');
+
+      // Clear the content of the spellList
+      spellList.innerHTML = '';
     }
 
     </script>
