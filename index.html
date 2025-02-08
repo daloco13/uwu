@@ -186,15 +186,15 @@ ul.no-bullets {
 
           // Iterate through each spell-cleu and collect data if it is SPELL_CAST_SUCCESS
           spellCleus.forEach(cleu => {
-            // if (cleu.classList.contains('SPELL_CAST_SUCCESS')) {
-            // }
-            const className = cleu.className;
-            const time = parseFloat(cleu.getAttribute('data-time'));
-            const source = cleu.getAttribute('data-source');
-            const target = cleu.getAttribute('data-target');
+            if (!cleu.classList.contains('SPELL_PERIODIC_HEAL') && !cleu.classList.contains('SPELL_HEAL') && !cleu.classList.contains('SPELL_MISSED') && (cleu.classList.contains('SPELL_CAST_SUCCESS') || cleu.classList.contains('SPELL_AURA_APPLIED'))) {
+              const className = cleu.className;
+              const time = parseFloat(cleu.getAttribute('data-time'));
+              const source = cleu.getAttribute('data-source');
+              const target = cleu.getAttribute('data-target');
 
-            // Push the spell data into the history array
-            spellHistory.push({ spellName, className, time, target, source, imgSrc });
+              // Push the spell data into the history array
+              spellHistory.push({ spellName, className, time, target, source, imgSrc });
+            }
           });
         }
       });
