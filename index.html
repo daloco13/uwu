@@ -41,11 +41,9 @@ ul.no-bullets {
             <li>2. Click on "<b>Top</b>", select a class and select a player</li>
             <li>3. Choose a boss and click on the "<b>Date</b>" (e.g. 13-03-24)</li>
             <li>4. Click on the player, on the upper right, click on the icon and select a boss (e.g. Deathbringer)</li>
-            <li>5. Right click on the page, then find "<b>Inspect element</b>", find "<b><i>&lt;tbody&gt;</i></b>" and right click > <i>Copy > Element or Inner HTML</i></li>
-            <li>6. Go to spell timeline site, paste the result in "<b>Spell Name Extractor</b>", click on button ("<b>Extract Spell Names</b>")</li>
-            <li>7. Go back to uwu-logs site, click on "<b>Timeline</b>", click on "Before pull" and select a time (e.g. 5, 10, 15, 30)</li>
-            <li>8. Right click on the page, then find "<b>Inspect element</b>", find "<b><i>&lt;spells-main class="casts-section-main&gt;</i></b>" and right click > <i>Copy > Element or Inner HTML</i></li>
-            <li>9. Go to spell timeline site, paste the result in "<b>Spell Casts</b>", click on button ("<b>Display Spell Rotation</b>")</li>
+            <li>5. Click on "<b>Timeline</b>"
+            <li>6. Right click on the page, then find "<b>Inspect element</b>", find "<b><i>&lt;spells-main class="casts-section-main&gt;</i></b>" and right click > <i>Copy > Element or Inner HTML</i></li>
+            <li>7. Go to spell timeline site, paste the result in "<b>Combat Log</b>", click on button ("<b>Display Log</b>")</li>
           </ul>
         </div>
       </div>
@@ -68,15 +66,16 @@ ul.no-bullets {
       </div>
 
       <div>
-        <!-- Clickable title to toggle visibility for Spell Rotation -->
+        <!-- Clickable title to toggle visibility for combat log -->
         <h3 class="section-title-casts"><b>Combat Log</b>▶</h3>
-        <!-- Div for Spell Rotation -->
+        <!-- Div for combat log -->
         <div class="content-section spell-rotation">
           <div class="textarea-section">
             <!-- Textarea for HTML input -->
             <textarea id="htmlInputSpellRotation" rows="10" cols="100" placeholder="Paste your HTML here... (see guide)"></textarea>
-            <!-- Button to display the spell rotation table -->
-            <button class='text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800' onclick="displaySpellRotation()">Display Spell Rotation</button>
+            <br />
+            <!-- Button to display the combat log table -->
+            <button class='text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800' onclick="displaySpellRotation()">Display Log</button>
           </div>
           <div class="container mx-auto p-4">
             <h2 class="text-xl font-bold mb-4 section-title-timeline">Spell Timeline</h2>
@@ -233,7 +232,7 @@ ul.no-bullets {
       });
     }
 
-    // Function to display spell rotation table
+    // Function to display combat log table
     function displaySpellRotation() {
       // Get the value from the textarea
       const htmlContent = document.getElementById('htmlInputSpellRotation').value;
