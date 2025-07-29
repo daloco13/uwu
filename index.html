@@ -53,8 +53,9 @@ ul.no-bullets {
       <div class="mt-4">
         <button class="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" onclick="clearTextareas()">Clear</button>
       </div>
+      <div style="visibility: hidden;">  
       <h3 class="spell-titles"><b>Spell Name Extractor </b>▶</h3>
-      <div class="spell-names">
+      <div class="spell-names hidden">
         <!-- Textarea for HTML input -->
         <textarea id="htmlInput" rows="10" cols="100" placeholder="Paste your HTML here... (see guide)"></textarea>
         <!-- Button to process the input -->
@@ -64,9 +65,11 @@ ul.no-bullets {
           <pre id="spellList"></pre>
         </div>
       </div>
+      </div>
+
       <div>
         <!-- Clickable title to toggle visibility for Spell Rotation -->
-        <h3 class="section-title-casts"><b>Spell Casts </b>▶</h3>
+        <h3 class="section-title-casts"><b>Combat Log</b>▶</h3>
         <!-- Div for Spell Rotation -->
         <div class="content-section spell-rotation">
           <div class="textarea-section">
@@ -147,7 +150,12 @@ ul.no-bullets {
         'Strength of the Taunka',
         'Greatness',
         'Icy Rage',
-        'Hysteria'
+        'Hysteria',
+        'Surging Power',
+        'Recklessness',
+        'Death Wish',
+        'Flame Cap',
+        'Wild Magic'
       ]
 
       spellList = [...spellNames, ...buffs];
@@ -176,7 +184,6 @@ ul.no-bullets {
       spellRows.forEach(row => {
         const spellName = row.getAttribute('data-spell-name');
         // Check if the spell name is in the list of specific spells
-        if (specificSpells.includes(spellName)) {
           // Get the img element within the spell-name-data
           const imgElement = row.querySelector('spell-name-data img');
           const imgSrc = imgElement ? imgElement.getAttribute('src') : null;
@@ -186,7 +193,9 @@ ul.no-bullets {
 
           // Iterate through each spell-cleu and collect data if it is SPELL_CAST_SUCCESS
           spellCleus.forEach(cleu => {
-            if (!cleu.classList.contains('SPELL_PERIODIC_HEAL') && !cleu.classList.contains('SPELL_HEAL') && !cleu.classList.contains('SPELL_MISSED') && (cleu.classList.contains('SPELL_CAST_START') || cleu.classList.contains('SPELL_CAST_SUCCESS') || cleu.classList.contains('SPELL_AURA_APPLIED'))) {
+            // if (!cleu.classList.contains('SPELL_PERIODIC_HEAL') && !cleu.classList.contains('SPELL_HEAL')  && (cleu.classList.contains('SPELL_CAST_START') || cleu.classList.contains('SPELL_CAST_SUCCESS') || cleu.classList.contains('SPELL_AURA_APPLIED'))) {
+            // if (  cleu.classList.contains('SPELL_CAST_SUCCESS')) {
+              
               const className = cleu.className;
               const time = parseFloat(cleu.getAttribute('data-time'));
               const source = cleu.getAttribute('data-source');
@@ -194,9 +203,11 @@ ul.no-bullets {
 
               // Push the spell data into the history array
               spellHistory.push({ spellName, className, time, target, source, imgSrc });
-            }
+            // }
+            // }
           });
-        }
+        // if (specificSpells.includes(spellName)) {
+        // }
       });
 
       // Sort the spell history by time
@@ -205,26 +216,21 @@ ul.no-bullets {
       return spellHistory;
     }
 
-    // Function to filter and remove duplicates
-    function filterAndRemoveDuplicates(data) {
-      // Create a Map to store unique entries based on time, spellName, and target
-      const uniqueEntries = new Map();
+    function removeSpecifiedSpellsAndFilter(data) {
+      const specifiedData = [
+        "Moonkin Aura",
+        "Gift of the Wild",
+        "Leader of the Pack",
+        "Healing Stream Totem",
+        "Horn of Winter",
+        "Path of Frost"
+      ];
 
-      data.forEach(entry => {
-        // Skip entries with target "nil"
-        // if (entry.target === "nil") return;
-
-        // Use a composite key of time, spellName, and target
-        const key = `${entry.time}-${entry.spellName}-${entry.target}`;
-
-        // Add entry to the Map if the key is not already present
-        if (!uniqueEntries.has(key)) {
-          uniqueEntries.set(key, entry);
-        }
+      return data.filter(obj => {
+        const isNotSpecified = !specifiedData.includes(obj.spellName);
+        const isTimeValid = obj.time > -30;
+        return isNotSpecified && isTimeValid;
       });
-
-      // Convert the Map values back to an array
-      return Array.from(uniqueEntries.values());
     }
 
     // Function to display spell rotation table
@@ -238,8 +244,8 @@ ul.no-bullets {
       // Get the spell history
       const spellHistory = getSpellHistory(htmlContent, specificSpells);
 
-      // Filter and remove duplicates
-      const filteredData = filterAndRemoveDuplicates(spellHistory);
+      // Remove repeating buffs "Moonkin Aura, Gift of the Wild, Leader of the Pack, Healing Stream Totem, Horn of Winter"
+      const filteredData = removeSpecifiedSpellsAndFilter(spellHistory);
 
       const tableBody = document.getElementById('spellTableBody');
 
