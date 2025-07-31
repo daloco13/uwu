@@ -193,7 +193,7 @@ ul.no-bullets {
           // Iterate through each spell-cleu and collect data if it is SPELL_CAST_SUCCESS
           spellCleus.forEach(cleu => {
             // if (!cleu.classList.contains('SPELL_PERIODIC_HEAL') && !cleu.classList.contains('SPELL_HEAL')  && (cleu.classList.contains('SPELL_CAST_START') || cleu.classList.contains('SPELL_CAST_SUCCESS') || cleu.classList.contains('SPELL_AURA_APPLIED'))) {
-            if (!cleu.classList.contains('SPELL_PERIODIC_HEAL') && !cleu.classList.contains('SPELL_HEAL')) {
+            if (!cleu.classList.contains('SPELL_PERIODIC_HEAL') && !cleu.classList.contains('SPELL_HEAL') &&  !cleu.classList.contains('SPELL_PERIODIC_ENERGIZE')) {
               
               const className = cleu.className;
               const time = parseFloat(cleu.getAttribute('data-time'));
